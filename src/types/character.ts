@@ -6,7 +6,9 @@ export interface Character {
   gender: string;
   image: string;
   origin: { name: string };
-  location: { name: string };
+  location: { name: string; url: string };
+  type?: string;
+  episode?: string[];
 }
 
 export interface CharacterResponse {

@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './Pagination.module.css';
 
 interface PaginationProps {
   currentPage: number;
@@ -14,7 +15,7 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
   }
 
   return (
-    <div className="flex gap-2 flex-wrap mt-4">
+    <div className={`flex flex-wrap ${styles["pagination"]}`}>
       <button
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}

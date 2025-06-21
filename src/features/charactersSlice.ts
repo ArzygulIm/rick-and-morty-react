@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getAllCharacters } from "../../api/api";
-import { Character } from "../../types/character";
+import { getAllCharacters } from "../api/api";
+import { Character } from "../types/character";
 
 interface CharactersState {
   characters: Character[];

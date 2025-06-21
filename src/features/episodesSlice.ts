@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getAllEpisodes } from '../../api/api';
-import { Episode } from '../../types/episode';
+import { getAllEpisodes } from '../api/api';
+import { Episode } from '../types/episode';
 
 interface EpisodesState {
   episodes: Episode[];

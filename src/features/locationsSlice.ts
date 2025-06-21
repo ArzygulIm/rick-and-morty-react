@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllLocations } from "../../api/api";
-import { Location } from "../../types/location";
+import { getAllLocations } from "../api/api";
+import { Location } from "../types/location";
 
 interface LocationsState {
   locations: Location[];
