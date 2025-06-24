@@ -1,0 +1,9 @@
+.episode-details {
+  padding: 20px 0;
+  position: relative;
+  height: 90vh;
+}
+
+.episode-details a{
+    border-bottom: solid 2px #000000;
+}

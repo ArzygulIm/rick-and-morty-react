@@ -1,0 +1,49 @@
+@import "../../variables.css";
+
+.character-card {
+  width: 100%;
+  border-radius: 10px;
+  background-color: #fffff750;
+  border-top: 2px solid #fffff5c9;
+  border-left: 2px solid #fffff5;
+  box-shadow: 5px 5px 12px #000005da;
+  backdrop-filter: blur(4px);
+  display: flex;
+  /* justify-content: space-between; */
+}
+
+.character-card h5 {
+  color: var(--color-primary-dark);
+  font-family: Roboto;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 24px;
+}
+
+.character-card .main-img {
+  height: 150px;
+  object-fit: cover;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.card-text {
+  padding: 10px 20px;
+  font-family: Roboto;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-primary-dark);
+}
+
+.character-card .icons {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.info-wrap{
+  gap: 10px;
+}
+
+

@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getAllEpisodes } from '../../api/api';
-import { Episode } from '../../types/episode';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getAllEpisodes } from "../api/api";
+import { Episode } from "../types/episode";
 
 interface EpisodesState {
   episodes: Episode[];
@@ -19,19 +19,20 @@ const initialState: EpisodesState = {
   error: null,
 };
 
-export const fetchEpisodes = createAsyncThunk<any, number | undefined>(
-  'episodes/fetchEpisodes',
-  async (page = 1) => {
+export const fetchEpisodes = createAsyncThunk(
+  "episodes/fetchEpisodes",
+  async (page: number = 1) => {
     const response = await getAllEpisodes(page);
     return {
       episodes: response.data.results,
       info: response.data.info,
+      page,
     };
   }
 );
 
 const episodesSlice = createSlice({
-  name: 'episodes',
+  name: "episodes",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -42,12 +43,17 @@ const episodesSlice = createSlice({
       })
       .addCase(fetchEpisodes.fulfilled, (state, action) => {
         state.loading = false;
-        state.episodes = action.payload.episodes;
         state.info = action.payload.info;
+
+        if (action.payload.page === 1) {
+          state.episodes = action.payload.episodes;
+        } else {
+          state.episodes = [...state.episodes, ...action.payload.episodes];
+        }
       })
       .addCase(fetchEpisodes.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Error loading episodes';
+        state.error = action.error.message || "Error loading episodes";
       });
   },
 });

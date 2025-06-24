@@ -1,14 +1,12 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllLocations } from "../../api/api";
-import { Location } from "../../types/location";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getAllLocations } from "../api/api";
+import { Location } from "../types/location";
 
 interface LocationsState {
   locations: Location[];
   info: {
     count: number;
     pages: number;
-    next: string | null;
-    prev: string | null;
   } | null;
   loading: boolean;
   error: string | null;
@@ -21,13 +19,14 @@ const initialState: LocationsState = {
   error: null,
 };
 
-export const fetchLocations = createAsyncThunk<any, number | undefined>(
+export const fetchLocations = createAsyncThunk(
   "locations/fetchLocations",
-  async (page = 1) => {
+  async (page: number = 1) => {
     const response = await getAllLocations(page);
     return {
       locations: response.data.results,
       info: response.data.info,
+      page,
     };
   }
 );
@@ -44,8 +43,13 @@ const locationsSlice = createSlice({
       })
       .addCase(fetchLocations.fulfilled, (state, action) => {
         state.loading = false;
-        state.locations = action.payload.locations;
         state.info = action.payload.info;
+
+        if (action.payload.page === 1) {
+          state.locations = action.payload.locations;
+        } else {
+          state.locations = [...state.locations, ...action.payload.locations];
+        }
       })
       .addCase(fetchLocations.rejected, (state, action) => {
         state.loading = false;

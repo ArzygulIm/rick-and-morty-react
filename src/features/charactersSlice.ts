@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getAllCharacters } from "../../api/api";
-import { Character } from "../../types/character";
+import { getAllCharacters } from "../api/api";
+import { Character } from "../types/character";
 
 interface CharactersState {
   characters: Character[];
@@ -19,6 +19,7 @@ const initialState: CharactersState = {
   error: null,
 };
 
+// Thunk: получает персонажей по номеру страницы
 export const fetchCharacters = createAsyncThunk(
   "characters/fetchCharacters",
   async (page: number = 1) => {
@@ -26,6 +27,7 @@ export const fetchCharacters = createAsyncThunk(
     return {
       characters: response.data.results,
       info: response.data.info,
+      page,
     };
   }
 );
@@ -42,8 +44,15 @@ const charactersSlice = createSlice({
       })
       .addCase(fetchCharacters.fulfilled, (state, action) => {
         state.loading = false;
-        state.characters = action.payload.characters;
         state.info = action.payload.info;
+
+        if (action.payload.page === 1) {
+          // первая страница — заменяем старые данные
+          state.characters = action.payload.characters;
+        } else {
+          // остальные — добавляем
+          state.characters = [...state.characters, ...action.payload.characters];
+        }
       })
       .addCase(fetchCharacters.rejected, (state, action) => {
         state.loading = false;
