@@ -36,7 +36,7 @@ export default function EpisodePage() {
 
   return (
     <div>
-      <Header />
+      <Header minimal/>
       <div className="container">
         <div className={`${styles["episode-details"]} flex flex-fdc`}>
           {loading && <p>Loading...</p>}

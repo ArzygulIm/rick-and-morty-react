@@ -51,7 +51,7 @@ export default function LocationPage() {
 
   return (
     <div>
-      <Header />
+      <Header minimal/>
       <div className="container">
         <div className={`${styles["location-details"]} flex flex-fdc`}>
           {loading && <p>Loading...</p>}

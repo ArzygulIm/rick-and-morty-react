@@ -1,82 +1,108 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchCharacters } from "../../features/charactersSlice";
 import { fetchLocations } from "../../features/locationsSlice";
 import { fetchEpisodes } from "../../features/episodesSlice";
-import { Pagination } from "../../components/Pagination/Pagination";
 import CharacterList from "../../components/CharacterList/CharacterList";
-import Header from "../../components/Header/Header";
+import LocationList from "../../components/LocationList/LocationList";
 import EpisodeList from "../../components/EpisodeList/EpisodeList";
+import Header from "../../components/Header/Header";
 
-export const HomePage = () => {
+const HomePage = () => {
   const dispatch = useAppDispatch();
-  const [activeTab, setActiveTab] = useState<
-    "characters" | "locations" | "episodes"
-  >("characters");
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [characterPage, setCharacterPage] = useState(1);
-  const [locationPage, setLocationPage] = useState(1);
-  const [episodePage, setEpisodePage] = useState(1);
+  const initialTab =
+    (searchParams.get("tab") as "characters" | "locations" | "episodes") ||
+    "characters";
+  const initialPage = Number(searchParams.get("page")) || 1;
 
-  const { info: charactersInfo } = useAppSelector((state) => state.characters);
-  const { info: locationsInfo } = useAppSelector((state) => state.locations);
-  const { episodes, info: episodesInfo } = useAppSelector(
-    (state) => state.episodes
+  const [activeTab, setActiveTab] = useState(initialTab);
+  const pageRef = useRef(initialPage);
+
+  const charactersInfo = useAppSelector((state) => state.characters.info);
+  const locationsInfo = useAppSelector((state) => state.locations.info);
+  const episodesInfo = useAppSelector((state) => state.episodes.info);
+
+  useEffect(() => {
+    const loadAllPages = async () => {
+      for (let i = 1; i <= pageRef.current; i++) {
+        if (activeTab === "characters") await dispatch(fetchCharacters(i));
+        if (activeTab === "locations") await dispatch(fetchLocations(i));
+        if (activeTab === "episodes") await dispatch(fetchEpisodes(i));
+      }
+    };
+    loadAllPages();
+  }, [dispatch, activeTab]);
+
+  useEffect(() => {
+    setSearchParams({ tab: activeTab, page: pageRef.current.toString() });
+  }, [activeTab, setSearchParams]);
+
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      const info =
+        activeTab === "characters"
+          ? charactersInfo
+          : activeTab === "locations"
+          ? locationsInfo
+          : episodesInfo;
+
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && info && pageRef.current < info.pages) {
+          pageRef.current += 1;
+          setSearchParams({ tab: activeTab, page: pageRef.current.toString() });
+          if (activeTab === "characters")
+            dispatch(fetchCharacters(pageRef.current));
+          if (activeTab === "locations")
+            dispatch(fetchLocations(pageRef.current));
+          if (activeTab === "episodes")
+            dispatch(fetchEpisodes(pageRef.current));
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [
+      dispatch,
+      activeTab,
+      charactersInfo,
+      locationsInfo,
+      episodesInfo,
+      setSearchParams,
+    ]
   );
 
   useEffect(() => {
-    if (activeTab === "characters") dispatch(fetchCharacters(characterPage));
-    if (activeTab === "locations") dispatch(fetchLocations(locationPage));
-    if (activeTab === "episodes") dispatch(fetchEpisodes(episodePage));
-  }, [activeTab, characterPage, locationPage, episodePage, dispatch]);
-
-  const handleClick = (tab: typeof activeTab) => {
-    setActiveTab(tab);
-  };
-
-  const handlePageChange = (newPage: number) => {
-    if (activeTab === "characters") setCharacterPage(newPage);
-    if (activeTab === "locations") setLocationPage(newPage);
-    if (activeTab === "episodes") setEpisodePage(newPage);
-  };
-
-  const getTotalPages = () => {
-    if (activeTab === "characters") return charactersInfo?.pages || 1;
-    if (activeTab === "locations") return locationsInfo?.pages || 1;
-    if (activeTab === "episodes") return episodesInfo?.pages || 1;
-    return 1;
-  };
-
-  const getCurrentPage = () => {
-    if (activeTab === "characters") return characterPage;
-    if (activeTab === "locations") return locationPage;
-    if (activeTab === "episodes") return episodePage;
-    return 1;
-  };
+    const scrollY = sessionStorage.getItem("scrollY");
+    if (scrollY) {
+      window.scrollTo(0, parseInt(scrollY));
+      sessionStorage.removeItem("scrollY");
+    }
+  }, []);
 
   return (
     <>
-      <Header />
-      <div className="container">
-        <div className="flex gap-4 mb-4">
-          <button onClick={() => handleClick("characters")}>Characters</button>
-          <button onClick={() => handleClick("locations")}>Locations</button>
-          <button onClick={() => handleClick("episodes")}>Episodes</button>
-        </div>
+      <Header
+        activeTab={activeTab}
+        onTabChange={(tab) => {
+          pageRef.current = 1; // Сбрасываем страницу
+          setActiveTab(tab);
+        }}
+      />
 
-        <div>
-          {activeTab === "characters" && <CharacterList />}
-          {activeTab === "locations" && (
-            <div>Локации</div>
-          )}
-          {activeTab === "episodes" && <EpisodeList />}
-        </div>
-
-        <Pagination
-          currentPage={getCurrentPage()}
-          totalPages={getTotalPages()}
-          onPageChange={handlePageChange}
-        />
+      <div style={{ paddingTop: "60px", marginTop:"8vh" }} className="container">
+        {activeTab === "characters" && (
+          <CharacterList lastElementRef={lastElementRef} />
+        )}
+        {activeTab === "locations" && (
+          <LocationList lastElementRef={lastElementRef} />
+        )}
+        {activeTab === "episodes" && (
+          <EpisodeList lastElementRef={lastElementRef} />
+        )}
       </div>
     </>
   );

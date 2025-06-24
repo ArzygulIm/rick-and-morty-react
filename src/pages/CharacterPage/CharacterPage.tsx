@@ -28,7 +28,7 @@ export default function CharacterPage() {
   console.log(character);
   return (
     <div>
-      <Header />
+      <Header minimal/>
 
       {character && (
         <div className="container">

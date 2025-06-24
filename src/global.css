@@ -118,6 +118,10 @@ button{
     justify-content: center;
 }
 
+.flex-jcsa{
+    justify-content: space-around;
+}
+
 .flex-wrap{
     flex-wrap: wrap;
 }

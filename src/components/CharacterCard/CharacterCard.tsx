@@ -1,5 +1,5 @@
 import { Character } from "../../types/character";
-import { Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import styles from "./CharacterCard.module.css";
 import AliveIcon from "../../icons/alive.png";
 import DeadIcon from "../../icons/dead.png";
@@ -13,21 +13,30 @@ interface Props {
   character: Character;
 }
 
-const CharacterCard = ({ character }: Props) => (
-  <Link to={`/character/${character.id}`}>
-    <div className={styles["character-card"]}>
-      <img
-        src={character.image}
-        alt={character.name}
-        className={styles["main-img"]}
-      />
+const CharacterCard = ({ character }: Props) => {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const tab = searchParams.get("tab") || "characters";
+  const page = searchParams.get("page") || "1";
 
-      <div className={styles["card-text"]}>
-        <h5>{character.name}</h5>
-        <div className="flex flex-jcsb">
-          <div className="flex flex-fdc flex-aic">
-            <span>Status</span>
-            {character.status === "Alive" || "Dead" || "unknown" ? (
+  const handleClick = () => {
+  sessionStorage.setItem("scrollY", window.scrollY.toString());
+};
+
+  return (
+    <Link to={`/character/${character.id}`} onClick={handleClick}>
+      <div className={styles["character-card"]}>
+        <img
+          src={character.image}
+          alt={character.name}
+          className={styles["main-img"]}
+        />
+
+        <div className={`${styles["card-text"]} flex flex-jcsa flex-fdc`}>
+          <h5>{character.name}</h5>
+          <div className={`${styles["info-wrap"]} flex`}>
+            <div className="flex flex-fdc flex-aic">
+              <span>Status</span>
               <img
                 src={
                   character.status === "Alive"
@@ -39,40 +48,42 @@ const CharacterCard = ({ character }: Props) => (
                 alt="Status"
                 className={styles["icons"]}
               />
-            ) : (
-              <span>{character.status}</span>
-            )}
-          </div>
+            </div>
 
-          <div className="flex flex-fdc flex-aic">
-            <span>Species</span>
-            {character.species === "Human" || "Alien" ? (
+            <div className="flex flex-fdc flex-aic">
+              <span>Species</span>
               <img
-                src={character.species === "Human" ? HumanIcon : AlienIcon}
+                src={
+                  character.species === "Human"
+                    ? HumanIcon
+                    : character.species === "Alien"
+                    ? AlienIcon
+                    : UnknownIcon
+                }
                 alt="Species"
                 className={styles["icons"]}
               />
-            ) : (
-              <span>{character.species}</span>
-            )}
-          </div>
+            </div>
 
-          <div className="flex flex-fdc flex-aic">
-            <span>Gender</span>
-            {character.gender === "Male" || "Female" ? (
+            <div className="flex flex-fdc flex-aic">
+              <span>Gender</span>
               <img
-                src={character.gender === "Male" ? MaleIcon : FemaleIcon}
+                src={
+                  character.gender === "Male"
+                    ? MaleIcon
+                    : character.gender === "Female"
+                    ? FemaleIcon
+                    : UnknownIcon
+                }
                 alt="Gender"
                 className={styles["icons"]}
               />
-            ) : (
-              <span>{character.gender}</span>
-            )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </Link>
-);
+    </Link>
+  );
+};
 
 export default CharacterCard;
