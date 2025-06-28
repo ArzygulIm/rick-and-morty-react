@@ -41,7 +41,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange, minimal }) => {
       <div className="container">
         <div className="flex flex-jcsb flex-aic">
           <Link to="/" className="logo">
-            MyAppLogo
+            Rick and Morty
           </Link>
 
           <nav className={`${styles.nav} ${isMenuOpen ? styles.show : ""}`}>
