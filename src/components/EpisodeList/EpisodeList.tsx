@@ -3,6 +3,7 @@ import { useEffect, useRef, useCallback } from "react";
 import { fetchEpisodes } from "../../features/episodesSlice";
 import { Link } from "react-router-dom";
 import styles from "./EpisodeList.module.css";
+import NotFoundPage from "../../pages/NotfoundPage/NotfoundPage";
 
 interface CharacterListProps {
   lastElementRef?: (node: HTMLDivElement | null) => void;
@@ -10,7 +11,7 @@ interface CharacterListProps {
 
 export default function EpisodeList({ lastElementRef }: CharacterListProps) {
   const dispatch = useAppDispatch();
-  const { episodes, info, loading } = useAppSelector((state) => state.episodes);
+  const { episodes, info, loading,error } = useAppSelector((state) => state.episodes);
   const page = useRef(1);
 
   useEffect(() => {
@@ -65,6 +66,7 @@ export default function EpisodeList({ lastElementRef }: CharacterListProps) {
       })}
 
       {loading && <p>Loading more episodes...</p>}
+      {error && <NotFoundPage />}
     </div>
   );
 }

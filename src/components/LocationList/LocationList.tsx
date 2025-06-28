@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchLocations } from "../../features/locationsSlice";
 import styles from "./LocationList.module.css";
 import { Link } from "react-router-dom";
+import NotFoundPage from "../../pages/NotfoundPage/NotfoundPage";
 
 interface CharacterListProps {
   lastElementRef?: (node: HTMLDivElement | null) => void;
@@ -10,17 +11,15 @@ interface CharacterListProps {
 
 export default function LocationList({ lastElementRef }: CharacterListProps) {
   const dispatch = useAppDispatch();
-  const { locations, info, loading } = useAppSelector(
+  const { locations, info, loading, error } = useAppSelector(
     (state) => state.locations
   );
   const page = useRef(1);
 
-  // Первичная загрузка
   useEffect(() => {
     dispatch(fetchLocations(page.current));
   }, [dispatch]);
 
-  // Intersection Observer
   const observer = useRef<IntersectionObserver | null>(null);
   const lastLocationRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -65,6 +64,7 @@ export default function LocationList({ lastElementRef }: CharacterListProps) {
         );
       })}
       {loading && <p>Loading more locations...</p>}
+      {error && <NotFoundPage />}
     </div>
   );
 }
