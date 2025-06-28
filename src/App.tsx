@@ -3,6 +3,7 @@ import HomePage from './pages/Homepage/Homepage';
 import CharacterPage from './pages/CharacterPage/CharacterPage';
 import EpisodePage from './pages/EpisodePage/EpisodePage';
 import LocationPage from './pages/LocationPage/LocationPage';
+import NotFoundPage from "./pages/NotfoundPage/NotfoundPage";
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
         <Route path="/character/:id" element={<CharacterPage />} />
         <Route path="/episode/:id" element={<EpisodePage />} />
         <Route path="/location/:id" element={<LocationPage />} />
-        {/* Add more routes as needed */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
   );
 }

@@ -6,6 +6,7 @@ import { fetchEpisodeById } from "../../features/episodeSlice";
 import { getCharacterByUrl } from "../../api/api";
 import styles from "./EpisodePage.module.css";
 import { loadCharacterNames } from "../../features/charactersFromArray";
+import NotFoundPage from "../NotfoundPage/NotfoundPage";
 
 export default function EpisodePage() {
   const { id } = useParams<{ id: string }>();
@@ -40,7 +41,7 @@ export default function EpisodePage() {
       <div className="container" style={{ paddingTop: "40px", marginTop:"8vh" }} >
         <div className={`${styles["episode-details"]} flex flex-fdc`}>
           {loading && <p>Loading...</p>}
-          {error && <p>Error: {error}</p>}
+          {error && <NotFoundPage/>}
           {episode && (
             <div className="flex flex-fdc">
               <h2>Episode: {episode.name}</h2>

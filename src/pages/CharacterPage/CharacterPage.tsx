@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchCharacterById } from "../../features/characterSlice";
 import styles from "./CharacterPage.module.css";
+import NotFoundPage from "../NotfoundPage/NotfoundPage";
 
 export default function CharacterPage() {
   const { id } = useParams<{ id: string }>();
@@ -29,7 +30,8 @@ export default function CharacterPage() {
   return (
     <div>
       <Header minimal/>
-
+      {loading && <p>Loading...</p>}
+      {error && <NotFoundPage/>}
       {character && (
         <div className="container" style={{ paddingTop: "40px", marginTop:"8vh" }} >
           <div className={`${styles["character-details"]} flex`}>

@@ -6,6 +6,7 @@ import { fetchLocation } from "../../features/locationSlice";
 import styles from "./LocationPage.module.css";
 import { fetchCharacterById } from "../../features/characterSlice";
 import { loadCharacterNames } from "../../features/charactersFromArray";
+import NotFoundPage from "../NotfoundPage/NotfoundPage";
 
 export default function LocationPage() {
   const { id } = useParams<{ id: string }>();
@@ -55,7 +56,7 @@ export default function LocationPage() {
       <div className="container" style={{ paddingTop: "40px", marginTop:"8vh" }} >
         <div className={`${styles["location-details"]} flex flex-fdc`}>
           {loading && <p>Loading...</p>}
-          {error && <p>Error: {error}</p>}
+          {error && <NotFoundPage/>}
           {location && (
             <div className="flex flex-fdc">
               <h2>Location: {location.name}</h2>
