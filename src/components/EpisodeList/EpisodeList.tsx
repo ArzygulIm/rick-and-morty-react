@@ -11,9 +11,8 @@ interface CharacterListProps {
 export default function EpisodeList({ lastElementRef }: CharacterListProps) {
   const dispatch = useAppDispatch();
   const { episodes, info, loading } = useAppSelector((state) => state.episodes);
-  const page = useRef(1); // сохраняем текущую страницу
+  const page = useRef(1);
 
-  // Загрузить первую страницу (или следующую при прокрутке)
   useEffect(() => {
     dispatch(fetchEpisodes(page.current));
   }, [dispatch]);

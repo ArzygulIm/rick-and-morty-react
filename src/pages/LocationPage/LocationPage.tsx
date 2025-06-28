@@ -52,19 +52,13 @@ export default function LocationPage() {
   return (
     <div>
       <Header minimal/>
-      <div className="container">
+      <div className="container" style={{ paddingTop: "40px", marginTop:"8vh" }} >
         <div className={`${styles["location-details"]} flex flex-fdc`}>
           {loading && <p>Loading...</p>}
           {error && <p>Error: {error}</p>}
           {location && (
             <div className="flex flex-fdc">
               <h2>Location: {location.name}</h2>
-              {/* <p>
-                <strong>Air Date:</strong> {episode.air_date}
-              </p>
-              <p>
-                <strong>Episode:</strong> {episode.episode}
-              </p> */}
               <div>
                 <strong>Characters:</strong>
                 <ul className="flex flex-wrap">

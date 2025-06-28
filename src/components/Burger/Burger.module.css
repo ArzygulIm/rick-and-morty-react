@@ -1,0 +1,54 @@
+@import "../../variables.css";
+
+.burger::after,
+.burger::before{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background: var(--color-primary-dark);
+    transition: all 0.3s ease-in-out;
+}
+
+.burger::after{
+    top: 10px;
+}
+
+.burger::before{
+    top: -10px;
+}
+
+.burger.active{
+    background: transparent;
+}
+
+.burger.active::after{
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.burger.active::before{
+    transform: rotate(-45deg);
+    top: 0;
+}
+
+.burger-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1000;
+  cursor: pointer;
+}
+.burger {
+  position: relative;
+  width: 30px;
+  height: 4px;
+  background: var(--color-primary-dark);
+}
+
+@media (min-width: 768px) {
+  .burger-wrapper {
+    display: none; 
+  }
+}
