@@ -88,7 +88,7 @@ const HomePage = () => {
       <Header
         activeTab={activeTab}
         onTabChange={(tab) => {
-          pageRef.current = 1; // Сбрасываем страницу
+          pageRef.current = 1; 
           setActiveTab(tab);
         }}
       />

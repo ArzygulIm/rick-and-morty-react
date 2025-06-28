@@ -37,7 +37,7 @@ export default function EpisodePage() {
   return (
     <div>
       <Header minimal/>
-      <div className="container">
+      <div className="container" style={{ paddingTop: "40px", marginTop:"8vh" }} >
         <div className={`${styles["episode-details"]} flex flex-fdc`}>
           {loading && <p>Loading...</p>}
           {error && <p>Error: {error}</p>}

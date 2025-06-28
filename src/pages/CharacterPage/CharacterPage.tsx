@@ -31,7 +31,7 @@ export default function CharacterPage() {
       <Header minimal/>
 
       {character && (
-        <div className="container">
+        <div className="container" style={{ paddingTop: "40px", marginTop:"8vh" }} >
           <div className={`${styles["character-details"]} flex`}>
             <img
               src={character.image}

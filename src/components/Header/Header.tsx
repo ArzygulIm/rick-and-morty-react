@@ -1,5 +1,7 @@
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useState } from "react";
 import styles from "./Header.module.css";
+import Burger from "../Burger/Burger";
 
 interface HeaderProps {
   activeTab?: "characters" | "locations" | "episodes";
@@ -10,11 +12,16 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange, minimal }) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleBack = () => {
     const tab = searchParams.get("tab") || "characters";
     const page = searchParams.get("page") || "1";
     navigate(`/?tab=${tab}&page=${page}`);
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
   };
 
   if (minimal) {
@@ -36,7 +43,8 @@ const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange, minimal }) => {
           <Link to="/" className="logo">
             MyAppLogo
           </Link>
-          <nav>
+
+          <nav className={`${styles.nav} ${isMenuOpen ? styles.show : ""}`}>
             <button
               onClick={() => onTabChange?.("characters")}
               className={activeTab === "characters" ? "active" : ""}
@@ -56,6 +64,9 @@ const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange, minimal }) => {
               Episodes
             </button>
           </nav>
+
+          {/* Бургер */}
+          <Burger isOpen={isMenuOpen} onToggle={toggleMenu} />
         </div>
       </div>
     </header>
